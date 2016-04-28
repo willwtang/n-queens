@@ -49,7 +49,7 @@ describe('solvers', function() {
         expect(numPieces).to.equal(n);
         expect(solutionBoard.hasAnyQueensConflicts()).to.be.equal(false);
       });
-
+      console.log('pass');
       // Check 2 and 3 for no solution
       [2, 3].map(function (n) {
         var solutionBoard = new Board(findNQueensSolution(n));
