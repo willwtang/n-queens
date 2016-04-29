@@ -102,35 +102,23 @@ window.findNQueensSolution = function(n) {
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
-window.countNQueensSolutions = function(n) {
+window.countNQueensSolutions = (n) => {
+  var count = 0;
+  var aBunchOfOnes = Math.pow(2, n) - 1;
 
-  var visited = [];
-  var solutionCount = 0;
-
-  function isAttacked(r, c) {
-    for (var i = 0; i < visited.length; i++) {
-      var visitedRow = i;
-      var visitedCol = visited[i];
-      if (r === visitedRow || c === visitedCol || (Math.abs(r - visitedRow) - Math.abs(c - visitedCol) === 0)) return true;
-    }
-    return false;
-  }
-
-  function recurse(row) {
-    if (row >= n) {
-      solutionCount++;
+  var addQ = (leftDiagonal, column, rightDiagonal) => {
+    if (column === aBunchOfOnes) {
+      count++;
     } else {
-      for (var i = 0; i < n; i++) {
-        if (!isAttacked(row, i)) {
-          visited.push(i);
-          recurse(row + 1);
-          visited.pop();
-        }
+      var possible = ~(leftDiagonal | column | rightDiagonal);
+      while (possible & aBunchOfOnes) {
+        var bit = (possible & -possible); // gets the first bit that's a 1
+        possible -= bit; // gets rid of the 1;
+        addQ((leftDiagonal|bit) >> 1, (column | bit), (rightDiagonal|bit) << 1);
       }
     }
-  }  //fixme
-
-  recurse(0);
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
+  }
+  addQ(0, 0, 0);
+  return count;
 };
+
